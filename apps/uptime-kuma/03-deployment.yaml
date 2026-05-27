@@ -2,12 +2,12 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: uptime-kuma
-  namespace: monitoreo
+  namespace: uptime-kuma
 spec:
-  replicas: 1  # Solo queremos una instancia de la base de datos corriendo a la vez
+  replicas: 1  
   selector:
     matchLabels:
-      app: uptime-kuma  # Esto vincula el Deployment con los Pods que creará
+      app: uptime-kuma 
   template:
     metadata:
       labels:
@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: uptime-kuma
-          image: louislam/uptime-kuma:1  # Imagen oficial de Docker Hub
+          image: louislam/uptime-kuma:2.3.2
           ports:
             - containerPort: 3001  # Puerto nativo de la aplicación
           volumeMounts:

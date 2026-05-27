@@ -2,7 +2,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: kuma-pvc
-  namespace: monitoreo
+  namespace: uptime-kuma 
 spec:
   accessModes:
     - ReadWriteOnce
