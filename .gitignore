@@ -1,0 +1,16 @@
+# Secretos y datos sensibles (¡Fundamental para repos públicos!)
+*secret*.yaml
+*secret*.yml
+.env
+*.env.*
+certs/
+*.pem
+*.crt
+*.key
+
+# Archivos temporales y del sistema
+.DS_Store
+.idea/
+.vscode/
+*.swp
+*~

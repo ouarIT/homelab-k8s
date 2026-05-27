@@ -1,0 +1,88 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: gotify
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: gotify-data-pvc
+  namespace: gotify
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gotify
+  namespace: gotify
+  labels:
+    app: gotify
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gotify
+  template:
+    metadata:
+      labels:
+        app: gotify
+    spec:
+      containers:
+      - name: gotify
+        image: gotify/server:latest
+        ports:
+        - containerPort: 80
+          name: http
+        env:
+        - name: GOTIFY_SERVER_PORT
+          value: "80"
+        # Configuración por defecto (User: admin / Pass: admin)
+        # Te pedirá cambiarla en el primer inicio
+        - name: GOTIFY_DEFAULTUSER_PASS
+          value: "admin" 
+        volumeMounts:
+        - name: gotify-data
+          mountPath: /app/data
+      volumes:
+      - name: gotify-data
+        persistentVolumeClaim:
+          claimName: gotify-data-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: gotify-service
+  namespace: gotify
+spec:
+  selector:
+    app: gotify
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: gotify-ingress
+  namespace: gotify
+  annotations:
+    ingress.kubernetes.io/ssl-redirect: "false" # Cambiar a true si manejas SSL
+spec:
+  rules:
+  - host: gotify.ouarit.lol
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: gotify-service
+            port:
+              number: 80

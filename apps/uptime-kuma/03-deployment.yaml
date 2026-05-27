@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: uptime-kuma
+  namespace: monitoreo
+spec:
+  replicas: 1  # Solo queremos una instancia de la base de datos corriendo a la vez
+  selector:
+    matchLabels:
+      app: uptime-kuma  # Esto vincula el Deployment con los Pods que creará
+  template:
+    metadata:
+      labels:
+        app: uptime-kuma
+    spec:
+      containers:
+        - name: uptime-kuma
+          image: louislam/uptime-kuma:1  # Imagen oficial de Docker Hub
+          ports:
+            - containerPort: 3001  # Puerto nativo de la aplicación
+          volumeMounts:
+            - name: kuma-data-volume
+              mountPath: /app/data  # Ruta interna del contenedor donde guarda los datos
+      volumes:
+        - name: kuma-data-volume
+          persistentVolumeClaim:
+            claimName: kuma-pvc  # Vinculamos el volumen con nuestro PVC del Paso 2

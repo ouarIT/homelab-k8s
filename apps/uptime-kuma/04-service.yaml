@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: uptime-kuma-service
+  namespace: monitoreo
+spec:
+  type: ClusterIP  # Solo accesible dentro del clúster por ahora
+  ports:
+    - port: 3001       # Puerto en el que escuchará el Servicio
+      targetPort: 3001 # Puerto al que redirigirá el tráfico dentro del Pod
+  selector:
+    app: uptime-kuma  # Envía el tráfico a cualquier Pod con esta etiqueta
