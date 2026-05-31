@@ -1,6 +1,4 @@
 # Secretos y datos sensibles (¡Fundamental para repos públicos!)
-*secret*.yaml
-*secret*.yml
 .env
 *.env.*
 certs/

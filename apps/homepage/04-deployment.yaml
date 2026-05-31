@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: homepage
+  namespace: home
+  labels:
+    app.kubernetes.io/name: homepage
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: homepage
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: homepage
+    spec:
+      serviceAccountName: homepage
+      containers:
+        - name: homepage
+          image: ghcr.io/gethomepage/homepage:latest
+          imagePullPolicy: Always
+          env:
+            - name: MY_POD_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
+            - name: HOMEPAGE_ALLOWED_HOSTS
+              value: "$(MY_POD_IP):3000,home.ouarit.lol"
+          ports:
+            - name: http
+              containerPort: 3000
+          volumeMounts:
+            - mountPath: /app/config/bookmarks.yaml
+              name: config-volume
+              subPath: bookmarks.yaml
+            - mountPath: /app/config/kubernetes.yaml
+              name: config-volume
+              subPath: kubernetes.yaml
+            - mountPath: /app/config/services.yaml
+              name: config-volume
+              subPath: services.yaml
+            - mountPath: /app/config/settings.yaml
+              name: config-volume
+              subPath: settings.yaml
+            - mountPath: /app/config/widgets.yaml
+              name: config-volume
+              subPath: widgets.yaml
+      volumes:
+        - name: config-volume
+          configMap:
+            name: homepage-config
