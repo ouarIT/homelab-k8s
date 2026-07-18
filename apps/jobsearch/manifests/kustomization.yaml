@@ -1,0 +1,13 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: jobsearch
+resources:
+  - 00-namespace.yaml
+  - 01-pvc.yaml
+  - 02-configmap-script.yaml
+  - 02b-configmap-cv.yaml
+  - 02c-configmap-env.yaml
+  - 06-secret-env-sealed.yaml
+  - 03-cronjob.yaml
+  - 03b-cronjob-discovery.yaml
+  - 04-web.yaml

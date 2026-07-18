@@ -1,0 +1,10 @@
+.env
+cv.txt
+manifests/02-configmap-script.yaml
+manifests/02b-configmap-cv.yaml
+manifests/02c-configmap-env.yaml
+manifests/02d-secret-env.yaml
+/data/
+__pycache__/
+*.pyc
+manifests/02d-secret-env-plain.yaml

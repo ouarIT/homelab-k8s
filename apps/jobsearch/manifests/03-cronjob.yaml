@@ -1,0 +1,57 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: jobsearch-scraper
+  namespace: jobsearch
+spec:
+  schedule: "0 6 * * *"
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      backoffLimit: 1
+      activeDeadlineSeconds: 3600
+      template:
+        spec:
+          restartPolicy: Never
+          containers:
+            - name: scraper
+              image: python:3.12-slim
+              command: ["/bin/sh", "-c"]
+              args:
+                - |
+                  set -e
+                  pip install --no-cache-dir --quiet python-jobspy pandas requests lxml_html_clean
+                  python /app/script.py
+              envFrom:
+                - configMapRef:
+                    name: jobsearch-config
+                - secretRef:
+                    name: jobsearch-secrets
+              volumeMounts:
+                - name: script
+                  mountPath: /app/script.py
+                  subPath: script.py
+                - name: cv
+                  mountPath: /app/cv.txt
+                  subPath: cv.txt
+                - name: data
+                  mountPath: /data
+              resources:
+                requests:
+                  cpu: "200m"
+                  memory: "256Mi"
+                limits:
+                  cpu: "1"
+                  memory: "1Gi"
+          volumes:
+            - name: script
+              configMap:
+                name: jobsearch-script
+            - name: cv
+              configMap:
+                name: jobsearch-cv
+            - name: data
+              persistentVolumeClaim:
+                claimName: jobsearch-data
