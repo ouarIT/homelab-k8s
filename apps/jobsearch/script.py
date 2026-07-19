@@ -379,8 +379,12 @@ def render_html(df_new: pd.DataFrame, df_master: pd.DataFrame) -> None:
 </head>
 <body>
 <h1>Vacantes filtradas — DevOps / SRE</h1>
-<p class="meta">Última corrida: {datetime.now(timezone.utc).isoformat(timespec="minutes")} UTC ·
-  {len(df_new)} nuevas hoy · {len(df_master)} en histórico</p>
+<p class="meta">Última corrida: <span id="lastRunTime" data-utc="{datetime.now(timezone.utc).isoformat()}"></span> ·
+  {len(df_new)} nuevas hoy · {len(df_master)} en histórico ·
+  <span style="display:inline-flex; align-items:center; gap:5px;">
+    Estado de IA: <span id="aiStatusDot" style="width:10px; height:10px; border-radius:50%; background:gray; display:inline-block;" title="Comprobando..."></span>
+  </span>
+</p>
 
 <div class="toolbar">
   <input id="q" type="text" placeholder="Buscar por título, empresa, ubicación...">
@@ -419,6 +423,42 @@ function applyFilter() {{
 
 q.addEventListener('input', applyFilter);
 siteFilter.addEventListener('change', applyFilter);
+
+const lastRunSpan = document.getElementById('lastRunTime');
+function updateTimeAgo() {{
+  if (!lastRunSpan) return;
+  const utcDate = new Date(lastRunSpan.dataset.utc);
+  const now = new Date();
+  const diffMs = now - utcDate;
+  const diffMins = Math.floor(diffMs / 60000);
+  const diffHours = Math.floor(diffMins / 60);
+  
+  let timeAgo = '';
+  if (diffMins < 1) timeAgo = 'hace menos de 1 minuto';
+  else if (diffMins < 60) timeAgo = `hace ${diffMins} min`;
+  else if (diffHours < 24) timeAgo = `hace ${diffHours} hr`;
+  else timeAgo = `hace ${Math.floor(diffHours / 24)} días`;
+  
+  lastRunSpan.textContent = `${utcDate.toLocaleString()} (${timeAgo})`;
+}}
+updateTimeAgo();
+setInterval(updateTimeAgo, 60000);
+
+const aiUrl = "{IA_URL}";
+const aiStatusDot = document.getElementById('aiStatusDot');
+async function pingAI() {{
+  if (!aiUrl || !aiStatusDot) return;
+  try {{
+    await fetch(aiUrl, {{ mode: 'no-cors', cache: 'no-store' }});
+    aiStatusDot.style.background = '#8de08d';
+    aiStatusDot.title = "IA Alcanzable";
+  }} catch (err) {{
+    aiStatusDot.style.background = '#e37b7b';
+    aiStatusDot.title = "IA No Alcanzable";
+  }}
+}}
+pingAI();
+setInterval(pingAI, 300000);
 </script>
 </body>
 </html>"""
