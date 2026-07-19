@@ -1,0 +1,37 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: jobsearch-config
+  namespace: jobsearch
+data:
+  # Ubicación: estos SÍ se quedan manuales porque son datos objetivos
+  # (nombres de lugar), no juicios de "esto encaja con mi perfil o no".
+  LOCATION: 'Mexico'
+  COUNTRY_INDEED: 'mexico'
+  LOCATION_ALLOW: 'san luis potosi,san luis potosí,slp'
+  REMOTE_HINTS: 'remote,remoto,home office,hybrid,híbrido,work from home,desde casa'
+
+  # Fuentes de JobSpy
+  SITES: 'indeed,linkedin,google,zip_recruiter'
+  RESULTS_WANTED: '40'
+
+  # Umbral de match: por debajo de esto, una vacante ni siquiera aparece
+  # en el dashboard. Los search_terms y exclude_titles ya NO viven aquí:
+  # se generan automáticamente desde cv.txt (ver common.ensure_profile).
+  MIN_MATCH_SCORE: '40'
+
+  # Discovery de bajo perfil
+  DISCOVERY_MAX_DOMAINS_PER_RUN: '1'
+  DISCOVERY_STRIKES_BEFORE_BLOCK: '2'
+  DISCOVERY_URL_COOLDOWN_HOURS: '24'
+  SCRAPER_USER_AGENT: 'Mozilla/5.0 (compatible; ouarit-jobsearch-bot/1.0; +http://jobs.ouarit.lol)'
+
+  # Notificaciones y dashboard
+  GOTIFY_URL: ''
+  JOBS_PUBLIC_URL: 'http://jobs.ouarit.lol'
+
+  # IA / Ollama
+  IA_URL: 'https://ia.ouarit.lol/v1/chat/completions'
+  IA_MODEL: 'qwen3.5:9b'
+  IA_MAX_JOBS_TO_SCORE: '25'
+  IA_TIMEOUT_SECONDS: '180'

@@ -1,0 +1,30 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: jobsearch
+
+resources:
+  - manifests/00-namespace.yaml
+  - manifests/01-pvc.yaml
+  - manifests/02-configmap-env.yaml
+  - manifests/06-secret-env-sealed.yaml
+  - manifests/03-cronjob-scraper.yaml
+  - manifests/03b-cronjob-discovery.yaml
+  - manifests/04-web.yaml
+
+# Única fuente de verdad para el código y el CV: Kustomize los lee
+# directamente del repo al momento de `kubectl apply -k`. No hay paso
+# intermedio (nada de deploy.py) — si editas src/*.py o cv.txt, el
+# siguiente apply ya lo refleja.
+configMapGenerator:
+  - name: jobsearch-src
+    files:
+      - common.py=src/common.py
+      - cv_extract.py=src/cv_extract.py
+      - scraper.py=src/scraper.py
+      - discovery.py=src/discovery.py
+  - name: jobsearch-cv
+    files:
+      - cv.txt=cv.txt
+
+generatorOptions:
+  disableNameSuffixHash: true

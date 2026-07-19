@@ -1,0 +1,16 @@
+[project]
+name = "jobsearch"
+version = "0.2.0"
+description = "Búsqueda automática de empleo: JobSpy + discovery de bajo perfil + scoring por IA"
+requires-python = ">=3.12"
+dependencies = [
+    "pandas>=2.3.3",
+    "requests>=2.34.2",
+    "python-jobspy>=1.1.82",
+    "lxml-html-clean>=0.4.5",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=9.1.1",
+]

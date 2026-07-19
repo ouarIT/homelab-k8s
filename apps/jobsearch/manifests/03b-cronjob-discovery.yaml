@@ -1,0 +1,57 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: jobsearch-discovery
+  namespace: jobsearch
+spec:
+  schedule: "0 */3 * * *"
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      backoffLimit: 1
+      activeDeadlineSeconds: 1800
+      template:
+        spec:
+          restartPolicy: Never
+          containers:
+            - name: discovery
+              image: python:3.12-slim
+              workingDir: /app
+              command: ["/bin/sh", "-c"]
+              args:
+                - |
+                  set -e
+                  pip install --no-cache-dir --quiet pandas requests
+                  python /app/discovery.py
+              envFrom:
+                - configMapRef:
+                    name: jobsearch-config
+                - secretRef:
+                    name: jobsearch-secrets
+              volumeMounts:
+                - name: src
+                  mountPath: /app
+                - name: cv
+                  mountPath: /app/cv.txt
+                  subPath: cv.txt
+                - name: data
+                  mountPath: /data
+              resources:
+                requests:
+                  cpu: "200m"
+                  memory: "256Mi"
+                limits:
+                  cpu: "1"
+                  memory: "512Mi"
+          volumes:
+            - name: src
+              configMap:
+                name: jobsearch-src
+            - name: cv
+              configMap:
+                name: jobsearch-cv
+            - name: data
+              persistentVolumeClaim:
+                claimName: jobsearch-data

@@ -1,0 +1,66 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jobsearch-web
+  namespace: jobsearch
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: jobsearch-web
+  template:
+    metadata:
+      labels:
+        app: jobsearch-web
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:alpine
+          ports:
+            - containerPort: 80
+          volumeMounts:
+            - name: data
+              mountPath: /usr/share/nginx/html
+              readOnly: true
+          resources:
+            requests:
+              cpu: "50m"
+              memory: "32Mi"
+            limits:
+              cpu: "200m"
+              memory: "128Mi"
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: jobsearch-data
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: jobsearch-web-service
+  namespace: jobsearch
+spec:
+  selector:
+    app: jobsearch-web
+  ports:
+    - port: 80
+      targetPort: 80
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: jobsearch-ingress
+  namespace: jobsearch
+spec:
+  ingressClassName: traefik
+  rules:
+    - host: jobs.ouarit.lol
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: jobsearch-web-service
+                port:
+                  number: 80
