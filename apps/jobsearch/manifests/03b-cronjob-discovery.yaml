@@ -31,11 +31,8 @@ spec:
                 - secretRef:
                     name: jobsearch-secrets
               volumeMounts:
-                - name: src
+                - name: app-files
                   mountPath: /app
-                - name: cv
-                  mountPath: /app/cv.txt
-                  subPath: cv.txt
                 - name: data
                   mountPath: /data
               resources:
@@ -44,14 +41,15 @@ spec:
                   memory: "256Mi"
                 limits:
                   cpu: "1"
-                  memory: "512Mi"
+                  memory: "1Gi"
           volumes:
-            - name: src
-              configMap:
-                name: jobsearch-src
-            - name: cv
-              configMap:
-                name: jobsearch-cv
+            - name: app-files
+              projected:
+                sources:
+                  - configMap:
+                      name: jobsearch-src
+                  - configMap:
+                      name: jobsearch-cv
             - name: data
               persistentVolumeClaim:
                 claimName: jobsearch-data
