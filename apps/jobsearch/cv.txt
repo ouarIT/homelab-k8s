@@ -33,76 +33,57 @@
 
 % ================= SUMMARY =================
 \section*{Professional Summary}
-Infrastructure Engineer and current Technical Lead specialized in large-scale observability, high-availability architecture, and automation. I approach problems analytically — understanding which components are involved before acting — and combine hands-on architecture work with client-facing consulting, incident ownership, and team leadership. Tool-agnostic by conviction: the stack is secondary to understanding the problem deeply and solving it right.
+Infrastructure Engineer specialized in Linux systems administration, high-availability architecture, and automation, with deep expertise in observability tooling. Hands-on builder of HA database clusters, containerized platforms, and Python-based automation pipelines, including a monitoring platform covering 5,100+ hosts. I approach problems analytically -- understanding which components are involved before acting -- and I'm tool-agnostic by conviction: the stack is secondary to understanding the problem deeply and solving it right. Currently seeking an individual-contributor role in a larger engineering organization to keep growing technically alongside senior peers.
 
 % ================= SKILLS =================
 \section*{Technical Skills}
 \noindent
-\textbf{Data \& Databases:} PostgreSQL (TimescaleDB), SQL, Data Integrity Validation, Prometheus. \\
+\textbf{Cloud \& Infrastructure:} Linux (RHEL, Ubuntu, Rocky) System Administration, GCP, Docker, Podman, Firewalld. \\
 \textbf{Automation \& Coding:} Python (Advanced -- Scripting, ETL Pipelines, API Interaction), Ansible (Playbooks), Git, Bash. \\
-\textbf{Cloud \& Infrastructure:} Linux (RHEL, Ubuntu, Rocky), GCP, Docker, Podman, Firewalld. \\
-\textbf{Observability:} Zabbix (Certified Professional 7.0, Certified Specialist 7.0), Grafana, Loki, SNMP. \\
+\textbf{Data \& Databases:} PostgreSQL (TimescaleDB), SQL, Data Integrity Validation. \\
+\textbf{Observability:} Zabbix (Certified Professional 7.0, Certified Specialist 7.0), Grafana, Loki, Prometheus, SNMP. \\
 \textbf{Languages:} Spanish (Native), English (B2 -- Upper Intermediate).
 
 % ================= EXPERIENCE =================
 \section*{Experience}
 
 \noindent
-\textbf{Technical Lead} \hfill May 2026 -- Present
+\textbf{Infrastructure Engineer} \hfill Nov 2024 -- Present
 \\ \textit{ATALAIT - IMSS $\vert$ San Luis Potosí, MX}
 
 \vspace{3pt}
-\noindent \textbf{Client Relationship \& Incident Management}
+\noindent \textbf{Systems, Platform \& Database Administration}
 \begin{itemize}[leftmargin=0.15in, itemsep=2pt, parsep=0pt]
-    \item Act as the primary technical point of contact for IMSS, translating client-reported issues and improvement requests into scoped engineering work.
-    \item Own escalation and resolution for critical monitoring incidents under 24x7 coverage, coordinating cross-team response and driving root-cause follow-through.
+    \item Designed and administered a high-availability Linux platform (Patroni-managed PostgreSQL, Virtual IP failover) end-to-end, from technical specification through implementation.
+    \item Reclaimed 500+ GB of database storage by converting standard PostgreSQL tables to TimescaleDB hypertables with compression, reducing a 700 GB dataset to around 150 GB.
+    \item Strengthened the security posture of around 30 heterogeneous Linux servers by eliminating shared/generic accounts in favor of individual SSH key- and 2FA/TOTP-based authentication, and hardened systems via Ansible with Lynis vulnerability scanning and Wazuh SIEM deployment.
+    \item Containerized and deployed core services using Podman (notification relay, Nginx load balancer, Squid proxy, Semaphore, Promtail), served internal packages via a self-hosted repository for air-gapped VMs, and tuned PHP-FPM to increase web frontend throughput.
+    \item Led the technical rollout of NetBox for asset and configuration governance (CMDB), modeling infrastructure and configuration data end-to-end.
 \end{itemize}
 
 \vspace{3pt}
-\noindent \textbf{Team Development \& Governance}
+\noindent \textbf{Automation \& Tooling (Python, Ansible)}
 \begin{itemize}[leftmargin=0.15in, itemsep=2pt, parsep=0pt]
-    \item Diagnosed team-wide technology skill gaps and built a continuous-feedback culture with directed internal projects and mandatory training in development standards, Git, and modern data-center management APIs, grounded in formal performance evaluations across six competency areas for a 11-engineer team.
-    \item Led the asset registration and configuration governance initiative (CMDB) through the team-wide rollout of NetBox, using it as a flagship project to raise the team's technical level in infrastructure modeling and configuration management.
-    \item Designed and led a formal onboarding program for new hires, growing the monitoring team to its current headcount of 11 engineers.
+    \item Automated Linux agent lifecycle management across 1,500+ endpoints using Ansible, ensuring consistent configuration at scale.
+    \item Engineered a hot-reloadable, multi-channel notification relay processing alerts across Telegram and SMTP, enabling zero-downtime configuration updates without interrupting end-user alerting services.
+    \item Built Python tooling for automated reporting, asset inventory collection, and cross-tool data consistency validation, reducing manual operational toil across daily workflows.
+    \item Engineered a Python ETL pipeline extracting historical metrics from a PostgreSQL-backed database into a Parquet data lake, using SCD Type 2 CDC, incremental watermark extraction, and atomic writes for long-term trend analysis.
 \end{itemize}
 
 \vspace{3pt}
-\noindent \textbf{Architecture Authority \& Security}
-\begin{itemize}[leftmargin=0.15in, itemsep=2pt, parsep=0pt]
-    \item Designed the next-generation Zabbix HA architecture (Patroni-managed PostgreSQL, Virtual IP failover) and formally documented it end-to-end (Project Charter, RACI, WBS); serve as the final technical authority for HA architecture approval and sign-off across monitoring projects, delegating execution transparently across the team and aligning directly with Project Managers.
-    \item Strengthened the security posture of around 30 heterogeneous Linux servers by eliminating shared/generic accounts in favor of individual SSH key- and 2FA/TOTP-based authentication, improving auditability and driving compliance.
-    \item Drove further reduction of manual operational work by extending automated reporting and asset-metric pipelines, and enabling automated Zabbix Actions and new Grafana dashboards for operational analytics.
-\end{itemize}
-
-\vspace{6pt}
-\noindent
-\textbf{Infrastructure Monitoring \& Automation Engineer} \hfill Nov 2024 -- May 2026
-\\ \textit{ATALAIT - IMSS $\vert$ San Luis Potosí, MX}
-
-\vspace{3pt}
-\noindent \textbf{Platform Architecture}
+\noindent \textbf{Observability \& Monitoring}
 \begin{itemize}[leftmargin=0.15in, itemsep=2pt, parsep=0pt]
     \item Architected a high-availability Zabbix monitoring platform with distributed proxies and an isolated staging environment, scaling to 5,100+ hosts and 3,400+ VMs while sustaining 3,500+ values/second with over 1 year of uninterrupted uptime.
-    \item Reclaimed 500+ GB of database storage by converting standard PostgreSQL tables to TimescaleDB hypertables with compression, reducing a 700 GB dataset to around 150 GB.
     \item Built an observability pipeline using Grafana Alloy, Grafana Loki and Prometheus for high-volume log ingestion from DNS infrastructure, Fortinet appliances, and OpenShift Container Platform, delivering production dashboards for operational visibility.
-\end{itemize}
-
-\vspace{3pt}
-\noindent \textbf{Automation \& Custom Integrations}
-\begin{itemize}[leftmargin=0.15in, itemsep=2pt, parsep=0pt]
-    \item Engineered a hot-reloadable, multi-channel notification relay processing alerts across Telegram and SMTP, enabling zero-downtime configuration updates without interrupting end-user alerting services.
     \item Developed custom monitoring integrations from scratch for Huawei iBMC (Redfish API, 170 bare-metal servers) and oVirt (REST API), extending observability to physical hardware and virtualization layers with no existing templates as reference.
-    \item Automated Zabbix agent lifecycle management across 1,500+ Linux endpoints using Ansible, ensuring consistent configuration at scale.
-    \item Containerized and deployed core monitoring services using Podman (including notification relay, Nginx load balancer, Squid proxy, Semaphore, and Promtail); additionally served Zabbix agent packages via a self-hosted repository for air-gapped VMs, and tuned PHP-FPM to increase Zabbix web frontend throughput.
-    \item Built Python tooling for automated reporting, asset inventory collection, and cross-tool data consistency validation, reducing manual operational toil across daily workflows.
-    \item Engineered a Python ETL pipeline extracting historical metrics from a PostgreSQL-backed Zabbix database into a Parquet data lake, using SCD Type 2 CDC, incremental watermark extraction, and atomic writes for long-term trend analysis beyond native Zabbix reporting.
+    \item Drove alert quality from noise to signal by tuning thresholds and correlating alerts to affected service components, enabling faster root cause isolation and reducing alert fatigue.
 \end{itemize}
 
 \vspace{3pt}
-\noindent \textbf{Reliability \& Security}
+\noindent \textbf{Client-Facing \& Incident Ownership}
 \begin{itemize}[leftmargin=0.15in, itemsep=2pt, parsep=0pt]
-    \item Drove alert quality from noise to signal by collaborating with internal infrastructure teams to tune thresholds and correlate alerts to affected service components, enabling faster root cause isolation and reducing alert fatigue.
-    \item Hardened the monitoring infrastructure via Ansible across servers, implementing SSH key provisioning, Lynis vulnerability scanning, and Wazuh SIEM deployment.
+    \item Act as primary technical point of contact for IMSS, translating client-reported issues into scoped engineering work with clear, responsive communication.
+    \item Own resolution for critical incidents under 24x7 coverage, driving root-cause analysis and follow-through.
 \end{itemize}
 
 \vspace{6pt}
