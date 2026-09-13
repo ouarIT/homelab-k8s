@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: ouarit-com-service
+  namespace: ouarit-com
+  labels:
+    app.kubernetes.io/name: ouarit-com-web
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: ouarit-com-web
+  ports:
+    - name: http
+      port: 80
+      targetPort: 80

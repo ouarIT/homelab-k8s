@@ -1,0 +1,28 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ouarit-com-ingress
+  namespace: ouarit-com
+spec:
+  ingressClassName: traefik
+  rules:
+  - host: ouarit.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: ouarit-com-service
+            port:
+              number: 80
+  - host: www.ouarit.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: ouarit-com-service
+            port:
+              number: 80

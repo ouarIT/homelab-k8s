@@ -1,0 +1,1082 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title id="html-title">Orlando Aguilar | Infrastructure & DevOps Engineer</title>
+  <meta name="description" id="html-desc" content="Personal landing page of Orlando Ulises Aguilar Rojas - Infrastructure & DevOps Engineer (IC). LNPP Stack: Linux, Nginx, PostgreSQL, Python.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🐧</text></svg>">
+  <style>
+    :root {
+      --bg: #0b0f14;
+      --card-bg: #111720;
+      --card-border: #1e293b;
+      --card-border-glow: #334155;
+      --text: #cbd5e1;
+      --text-muted: #64748b;
+      --text-white: #f8fafc;
+      --green: #10b981;
+      --green-glow: rgba(16, 185, 129, 0.15);
+      --cyan: #38bdf8;
+      --purple: #a855f7;
+      --yellow: #f59e0b;
+      --red: #f43f5e;
+      --blue: #3b82f6;
+      --font-mono: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', Menlo, Monaco, Consolas, monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: var(--font-mono);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 2rem 1rem;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Top banner */
+    .top-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.55rem;
+      background: rgba(16, 185, 129, 0.08);
+      border: 1px solid rgba(16, 185, 129, 0.25);
+      color: var(--green);
+      font-size: 0.85rem;
+      padding: 0.4rem 0.95rem;
+      border-radius: 9999px;
+      margin-bottom: 1.25rem;
+      text-decoration: none;
+      box-shadow: 0 0 24px var(--green-glow);
+      transition: all 0.2s ease;
+    }
+
+    .top-badge:hover {
+      background: rgba(16, 185, 129, 0.15);
+      border-color: var(--green);
+    }
+
+    .top-badge .dot {
+      width: 8px;
+      height: 8px;
+      background-color: var(--green);
+      border-radius: 50%;
+      box-shadow: 0 0 8px var(--green);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(0.85); }
+    }
+
+    /* Terminal window */
+    .terminal-window {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      width: 100%;
+      max-width: 1100px;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.65), 0 0 1px rgba(255, 255, 255, 0.1);
+      overflow: hidden;
+    }
+
+    .terminal-header {
+      background: #080d14;
+      padding: 0.75rem 1.25rem;
+      display: flex;
+      align-items: center;
+      border-bottom: 1px solid var(--card-border);
+      gap: 0.5rem;
+    }
+
+    .window-btn {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+    .btn-red { background-color: #ff5f56; }
+    .btn-yellow { background-color: #ffbd2e; }
+    .btn-green { background-color: #27c93f; }
+
+    .terminal-title {
+      flex: 1;
+      text-align: center;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-right: 48px;
+      user-select: none;
+    }
+
+    .terminal-body {
+      padding: 1.5rem;
+      font-size: 0.92rem;
+      overflow-x: auto;
+    }
+
+    /* MOTD / Welcome Banner in terminal text format */
+    .motd-text {
+      color: var(--green);
+      font-family: var(--font-mono);
+      font-size: 0.82rem;
+      line-height: 1.35;
+      margin-bottom: 1.25rem;
+      white-space: pre;
+      user-select: none;
+      opacity: 0.9;
+    }
+
+    /* CLI Session Prompt */
+    .prompt-block {
+      margin-bottom: 1.25rem;
+      color: var(--text-muted);
+      font-size: 0.88rem;
+    }
+
+    .prompt-line {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .prompt-line .py { color: var(--yellow); }
+    .prompt-line .arrow { color: var(--green); font-weight: bold; }
+    .prompt-line .cmd { color: var(--text-white); font-weight: 500; }
+    .prompt-line .host { color: var(--cyan); }
+
+    /* Fastfetch layout */
+    .fastfetch-container {
+      display: flex;
+      flex-direction: row;
+      gap: 2.25rem;
+      align-items: flex-start;
+      margin-bottom: 1.5rem;
+    }
+
+    @media (max-width: 900px) {
+      .fastfetch-container {
+        flex-direction: column;
+        gap: 1.25rem;
+      }
+      .ascii-column {
+        align-self: center;
+      }
+    }
+
+    .ascii-column {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      user-select: none;
+      flex-shrink: 0;
+    }
+
+    .ascii-art {
+      font-family: var(--font-mono);
+      font-size: 0.58rem;
+      line-height: 1.12;
+      color: var(--green);
+      white-space: pre;
+      text-shadow: 0 0 10px rgba(16, 185, 129, 0.3);
+    }
+
+    .ascii-caption {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 0.35rem;
+    }
+
+    .fastfetch-info {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+      min-width: 0;
+    }
+
+    .ff-header {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--green);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .ff-header .copy-btn {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--card-border);
+      color: var(--text-muted);
+      font-size: 0.75rem;
+      padding: 0.2rem 0.55rem;
+      border-radius: 4px;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.15s ease;
+    }
+
+    .ff-header .copy-btn:hover {
+      background: var(--green);
+      color: #000;
+      border-color: var(--green);
+    }
+
+    .ff-separator {
+      color: var(--card-border-glow);
+      user-select: none;
+      margin-bottom: 0.2rem;
+    }
+
+    .ff-row {
+      display: flex;
+      align-items: baseline;
+      gap: 0.6rem;
+      word-break: break-word;
+    }
+
+    .ff-label {
+      color: var(--cyan);
+      font-weight: 600;
+      min-width: 130px;
+      flex-shrink: 0;
+    }
+
+    .ff-val {
+      color: var(--text);
+    }
+
+    .ff-val strong {
+      color: var(--text-white);
+    }
+
+    .ff-link {
+      color: var(--cyan);
+      text-decoration: none;
+      border-bottom: 1px dashed rgba(56, 189, 248, 0.4);
+      transition: all 0.15s ease;
+    }
+
+    .ff-link:hover {
+      color: var(--green);
+      border-bottom-color: var(--green);
+    }
+
+    /* Locale Interactive Switcher */
+    .locale-btn {
+      cursor: pointer;
+      color: var(--text-muted);
+      border-bottom: 1px dashed rgba(100, 116, 139, 0.5);
+      transition: all 0.15s ease;
+      user-select: none;
+    }
+
+    .locale-btn:hover {
+      color: var(--text-white);
+      border-bottom-color: var(--text-white);
+    }
+
+    .locale-btn.active {
+      color: var(--green);
+      font-weight: 600;
+      border-bottom: 1px solid var(--green);
+    }
+
+    /* Badges list */
+    .skills-badges {
+      display: inline-flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+      margin-top: 0.15rem;
+    }
+
+    .badge-chip {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 0.1rem 0.45rem;
+      border-radius: 4px;
+      font-size: 0.8rem;
+      color: var(--text-white);
+      white-space: nowrap;
+    }
+
+    .badge-lnpp {
+      background: rgba(16, 185, 129, 0.1);
+      border-color: rgba(16, 185, 129, 0.35);
+      color: #a7f3d0;
+      font-weight: 600;
+    }
+
+    /* ANSI Colors Bar */
+    .ansi-colors {
+      margin-top: 0.8rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+      user-select: none;
+    }
+
+    .ansi-row {
+      display: flex;
+      gap: 0.35rem;
+    }
+
+    .ansi-block {
+      width: 26px;
+      height: 12px;
+      border-radius: 2px;
+    }
+
+    /* Interactive section */
+    .interactive-cli {
+      border-top: 1px solid var(--card-border);
+      padding-top: 1.25rem;
+      margin-top: 0.5rem;
+    }
+
+    .cli-prompt-line {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .cli-input-wrapper {
+      display: flex;
+      align-items: center;
+      flex: 1;
+      min-width: 200px;
+    }
+
+    .cli-input {
+      background: transparent;
+      border: none;
+      outline: none;
+      color: var(--text-white);
+      font-family: var(--font-mono);
+      font-size: 0.92rem;
+      width: 100%;
+    }
+
+    .cli-quick-actions {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-top: 0.75rem;
+    }
+
+    .action-btn {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--card-border);
+      color: var(--text-muted);
+      font-size: 0.78rem;
+      padding: 0.25rem 0.6rem;
+      border-radius: 6px;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.15s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .action-btn:hover {
+      background: rgba(16, 185, 129, 0.12);
+      border-color: var(--green);
+      color: var(--green);
+    }
+
+    .cli-output {
+      margin-top: 1rem;
+      padding: 1.1rem;
+      background: #080d14;
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      font-size: 0.85rem;
+      color: var(--text);
+      white-space: pre-wrap;
+      display: none;
+      animation: fadeIn 0.2s ease-in-out;
+      line-height: 1.55;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Footer */
+    footer {
+      margin-top: 1.75rem;
+      text-align: center;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+    }
+
+    footer a {
+      color: var(--green);
+      text-decoration: none;
+    }
+
+    footer a:hover {
+      text-decoration: underline;
+    }
+
+    .copied-toast {
+      position: fixed;
+      bottom: 24px;
+      background: var(--green);
+      color: #000;
+      padding: 0.5rem 1.2rem;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.85rem;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(10px);
+      transition: all 0.25s ease;
+      box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+      z-index: 100;
+    }
+
+    .copied-toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Hero Status Badge -->
+  <div class="top-badge">
+    <span class="dot"></span>
+    <span id="top-badge-text">Self-hosted with ❤️ on <strong>Rocky Linux 10 & K3s</strong></span>
+  </div>
+
+  <!-- Terminal Window -->
+  <div class="terminal-window">
+    <div class="terminal-header">
+      <span class="window-btn btn-red"></span>
+      <span class="window-btn btn-yellow"></span>
+      <span class="window-btn btn-green"></span>
+      <span class="terminal-title">ouarit.com — terminal session</span>
+    </div>
+
+    <div class="terminal-body">
+      <!-- MOTD Welcome Banner: pure terminal text style -->
+      <pre class="motd-text" id="motd-banner">================================================================================
+  Welcome to ouarit.com by Orlando Aguilar
+  Infrastructure & DevOps Engineer | Self-hosted on Rocky Linux & K3s
+================================================================================</pre>
+
+      <!-- Session Prompt History -->
+      <div class="prompt-block">
+        <div class="prompt-line">
+          <span class="py">~ via 🐍 v3.14.7</span>
+        </div>
+        <div class="prompt-line">
+          <span class="arrow">❯</span>
+          <span class="cmd">ouarit --fetch</span>
+        </div>
+        <div class="prompt-line" style="color: var(--text-muted); font-size: 0.8rem; margin: 0.35rem 0;">
+          <span id="session-info">Session started: guest@ouarit.com</span>
+        </div>
+        <div class="prompt-line">
+          <span class="host">[guest@ouarit ~]$</span>
+          <span class="cmd">fastfetch</span>
+        </div>
+      </div>
+
+      <!-- Fastfetch Output -->
+      <div class="fastfetch-container">
+        <!-- ASCII Tux Penguin from asciiart.website/art/2098 -->
+        <div class="ascii-column">
+          <pre class="ascii-art">                              .:xxxxxxxx:.
+                           .xxxxxxxxxxxxxxxx.
+                          :xxxxxxxxxxxxxxxxxxx:.
+                         .xxxxxxxxxxxxxxxxxxxxxxx:
+                        :xxxxxxxxxxxxxxxxxxxxxxxxx:
+                        xxxxxxxxxxxxxxxxxxxxxxxxxxX:
+                        xxx:::xxxxxxxx::::xxxxxxxxx:
+                       .xx:   ::xxxxx:     :xxxxxxxx
+                       :xx  x.  xxxx:  xx.  xxxxxxxx
+                       :xx xxx  xxxx: xxxx  :xxxxxxx
+                       'xx 'xx  xxxx:. xx'  xxxxxxxx
+                        xx ::::::xx:::::.   xxxxxxxx
+                        xx:::::.::::.:::::::xxxxxxxx
+                        :x'::::'::::':::::':xxxxxxxxx.
+                        :xx.::::::::::::'   xxxxxxxxxx
+                        :xx: '::::::::'     :xxxxxxxxxx.
+                       .xx     '::::'        'xxxxxxxxxx.
+                     .xxxx                     'xxxxxxxxx.
+                   .xxxx                         'xxxxxxxxx.
+                 .xxxxx:                          xxxxxxxxxx.
+                .xxxxx:'                          xxxxxxxxxxx.
+               .xxxxxx:::.           .       ..:::_xxxxxxxxxxx:.
+              .xxxxxxx''      ':::''            ''::xxxxxxxxxxxx.
+              xxxxxx            :                  '::xxxxxxxxxxxx
+             :xxxx:'            :                    'xxxxxxxxxxxx:
+            .xxxxx              :                     ::xxxxxxxxxxxx
+            xxxx:'                                    ::xxxxxxxxxxxx
+            xxxx               .                      ::xxxxxxxxxxxx.
+        .:xxxxxx               :                      ::xxxxxxxxxxxx::
+        xxxxxxxx               :                      ::xxxxxxxxxxxxx:
+        xxxxxxxx               :                      ::xxxxxxxxxxxxx:
+        ':xxxxxx               '                      ::xxxxxxxxxxxx:'
+          .:. xx:.                                   .:xxxxxxxxxxxxx'
+        ::::::.'xx:.            :                  .:: xxxxxxxxxxx':
+.:::::::::::::::.'xxxx.                            ::::'xxxxxxxx':::.
+::::::::::::::::::.'xxxxx                          :::::.'.xx.'::::::.
+::::::::::::::::::::.'xxxx:.                       :::::::.'':::::::::
+':::::::::::::::::::::.'xx:'                     .'::::::::::::::::::::..
+  :::::::::::::::::::::.'xx                    .:: :::::::::::::::::::::::
+.:::::::::::::::::::::::. xx               .::xxxx :::::::::::::::::::::::
+:::::::::::::::::::::::::.'xxx..        .::xxxxxxx ::::::::::::::::::::'
+'::::::::::::::::::::::::: xxxxxxxxxxxxxxxxxxxxxxx :::::::::::::::::'
+  '::::::::::::::::::::::: xxxxxxxxxxxxxxxxxxxxxxx :::::::::::::::'
+      ':::::::::::::::::::_xxxxxx::'''::xxxxxxxxxx '::::::::::::'
+           '':.::::::::::'                        `._'::::::''</pre>
+          <span class="ascii-caption">🐧 Tux (Linux Mascot & inspiration for Tuxie 🐾)</span>
+        </div>
+
+        <!-- Fastfetch Info Rows -->
+        <div class="fastfetch-info">
+          <div class="ff-header">
+            <span>orlando.aguilar@ouarit.com</span>
+            <button class="copy-btn" id="btn-copy" onclick="copyEmail()" title="Copy email">📋 copy</button>
+          </div>
+          <div class="ff-separator">---------------------------------------------------------</div>
+
+          <div class="ff-row">
+            <span class="ff-label">Host:</span>
+            <span class="ff-val"><strong>Orlando Ulises Aguilar Rojas</strong></span>
+          </div>
+
+          <div class="ff-row">
+            <span class="ff-label">Title / Role:</span>
+            <span class="ff-val" id="ff-role"><strong>Infrastructure & DevOps Engineer</strong> (IC)</span>
+          </div>
+
+          <div class="ff-row">
+            <span class="ff-label">Education:</span>
+            <span class="ff-val" id="ff-education">B.S. in Information Technology (UPSLP)</span>
+          </div>
+
+          <div class="ff-row">
+            <span class="ff-label">Focus:</span>
+            <span class="ff-val" id="ff-focus">Analytical problem-solving · Mission-critical systems · Autonomous IC</span>
+          </div>
+
+          <div class="ff-row">
+            <span class="ff-label">Uptime:</span>
+            <span class="ff-val" id="uptime-counter" style="color: var(--green);">Calculating uptime...</span>
+          </div>
+
+          <div class="ff-row">
+            <span class="ff-label">Philosophy:</span>
+            <span class="ff-val" id="ff-philosophy">Tool-agnostic & Open Source advocate · Solving root cause right</span>
+          </div>
+
+          <div class="ff-row">
+            <span class="ff-label">Core (LNPP):</span>
+            <span class="ff-val">
+              <span class="skills-badges">
+                <span class="badge-chip badge-lnpp">🐧 Linux</span>
+                <span class="badge-chip badge-lnpp">🌐 Nginx</span>
+                <span class="badge-chip badge-lnpp">🐘 PostgreSQL</span>
+                <span class="badge-chip badge-lnpp">🐍 Python</span>
+              </span>
+            </span>
+          </div>
+
+          <div class="ff-row">
+            <span class="ff-label">Tooling:</span>
+            <span class="ff-val">
+              <span class="skills-badges">
+                <span class="badge-chip">🐚 Bash</span>
+                <span class="badge-chip">🐳 Docker / Podman</span>
+                <span class="badge-chip">📊 Zabbix</span>
+                <span class="badge-chip">🤖 Ansible</span>
+                <span class="badge-chip">🐙 Git</span>
+                <span class="badge-chip" id="ff-tooling-other" style="color: var(--cyan);">& much more</span>
+              </span>
+            </span>
+          </div>
+
+          <!-- Interactive Dual-Purpose Locale & Language Switcher -->
+          <div class="ff-row">
+            <span class="ff-label">Locale:</span>
+            <span class="ff-val">
+              <span id="loc-en" class="locale-btn active" onclick="switchLang('en')" title="Click to view site in English">en_US.UTF-8 (B2 Upper-Intermediate)</span>
+              <span style="color: var(--card-border-glow); margin: 0 0.35rem;">|</span>
+              <span id="loc-es" class="locale-btn" onclick="switchLang('es')" title="Clic para ver el sitio en Español">es_MX.UTF-8 (Native)</span>
+            </span>
+          </div>
+
+          <div class="ff-row">
+            <span class="ff-label">Homelab:</span>
+            <span class="ff-val" id="ff-homelab">Dell Latitude · Rocky Linux 10 & K3s · Cloudflare Tunnel</span>
+          </div>
+
+          <div class="ff-row">
+            <span class="ff-label">LinkedIn:</span>
+            <span class="ff-val">
+              <a class="ff-link" href="https://www.linkedin.com/in/orlandoaguilarit/" target="_blank" rel="noopener noreferrer">
+                linkedin.com/in/orlandoaguilarit ↗
+              </a>
+            </span>
+          </div>
+
+          <div class="ff-row">
+            <span class="ff-label">GitHub:</span>
+            <span class="ff-val">
+              <a class="ff-link" href="https://github.com/ouarIT" target="_blank" rel="noopener noreferrer">
+                github.com/ouarIT ↗
+              </a>
+            </span>
+          </div>
+
+          <div class="ff-row">
+            <span class="ff-label">Email:</span>
+            <span class="ff-val">
+              <a class="ff-link" href="mailto:orlando.aguilar@ouarit.com">
+                orlando.aguilar@ouarit.com ↗
+              </a>
+            </span>
+          </div>
+
+          <!-- Fastfetch ANSI Color Palette Blocks -->
+          <div class="ansi-colors">
+            <div class="ansi-row">
+              <span class="ansi-block" style="background: #2e3440;"></span>
+              <span class="ansi-block" style="background: #bf616a;"></span>
+              <span class="ansi-block" style="background: #a3be8c;"></span>
+              <span class="ansi-block" style="background: #ebcb8b;"></span>
+              <span class="ansi-block" style="background: #81a1c1;"></span>
+              <span class="ansi-block" style="background: #b48ead;"></span>
+              <span class="ansi-block" style="background: #88c0d0;"></span>
+              <span class="ansi-block" style="background: #e5e9f0;"></span>
+            </div>
+            <div class="ansi-row">
+              <span class="ansi-block" style="background: #4c566a;"></span>
+              <span class="ansi-block" style="background: #d08770;"></span>
+              <span class="ansi-block" style="background: #10b981;"></span>
+              <span class="ansi-block" style="background: #fcd34d;"></span>
+              <span class="ansi-block" style="background: #38bdf8;"></span>
+              <span class="ansi-block" style="background: #c084fc;"></span>
+              <span class="ansi-block" style="background: #2dd4bf;"></span>
+              <span class="ansi-block" style="background: #ffffff;"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Interactive Shell Section -->
+      <div class="interactive-cli">
+        <div class="cli-prompt-line">
+          <span class="host">[guest@ouarit ~]$</span>
+          <div class="cli-input-wrapper">
+            <input type="text" id="terminal-input" class="cli-input" placeholder="type 'help', 'skills' or click below..." autocomplete="off" spellcheck="false">
+          </div>
+        </div>
+
+        <div class="cli-quick-actions">
+          <button class="action-btn" onclick="runCommand('certs')">📜 certs</button>
+          <button class="action-btn" onclick="runCommand('skills')">🛠️ skills</button>
+          <button class="action-btn" onclick="runCommand('experience')">💼 experience</button>
+          <button class="action-btn" onclick="runCommand('contact')">✉️ contact</button>
+          <button class="action-btn" onclick="runCommand('clear')">🧹 clear</button>
+        </div>
+
+        <div id="cli-output" class="cli-output"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="copied-toast">Email copied to clipboard!</div>
+
+  <!-- Footer -->
+  <footer>
+    <p>GitOps deployed via <a href="https://github.com/ouarIT/homelab-k8s" target="_blank">homelab-k8s</a></p>
+  </footer>
+
+  <script>
+    // State
+    let currentLang = 'en';
+    let lastExecutedCmd = null;
+
+    // Bilingual Data Dictionary
+    const i18n = {
+      en: {
+        pageTitle: "Orlando Aguilar | Infrastructure & DevOps Engineer",
+        pageDesc: "Personal landing page of Orlando Ulises Aguilar Rojas - Infrastructure & DevOps Engineer (IC). LNPP Stack: Linux, Nginx, PostgreSQL, Python.",
+        topBadge: "Self-hosted with ❤️ on <strong>Rocky Linux 10 & K3s</strong>",
+        motd: `================================================================================
+  Welcome to ouarit.com by Orlando Aguilar
+  Infrastructure & DevOps Engineer | Self-hosted on Rocky Linux & K3s
+================================================================================`,
+        sessionInfo: "Session started: guest@ouarit.com",
+        role: "<strong>Infrastructure & DevOps Engineer</strong> (IC)",
+        education: "B.S. in Information Technology (UPSLP)",
+        focus: "Analytical problem-solving · Mission-critical systems · Autonomous IC",
+        philosophy: "Tool-agnostic & Open Source advocate · Deep understanding before acting",
+        toolingOther: "& much more",
+        homelab: "Dell Latitude · Rocky Linux 10 & K3s · Cloudflare Tunnel",
+        copyBtn: "📋 copy",
+        copiedToast: "Email copied to clipboard!",
+        cliPlaceholder: "type 'help', 'skills' or click below...",
+        uptimeYears: "years",
+        uptimeDays: "days",
+        commands: {
+          help: `AVAILABLE COMMANDS:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  • certs       : Official certifications (Zabbix, Cisco, Certiport)
+  • skills      : Technical competencies by engineering area
+  • experience  : Hands-on work history and major milestones
+  • contact     : Direct communication channels (Email, LinkedIn, GitHub)
+  • email       : Copy email address to clipboard
+  • clear       : Clear the terminal screen`,
+
+          certs: `CERTIFICATIONS & CREDENTIALS:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[+] Observability & Monitoring:
+    • Zabbix Certified Professional 7.0 (2026, Cert. No. CP-2606-058)
+    • Zabbix Certified Specialist 7.0 (2025)
+
+[+] Databases & Systems:
+    • Information Technology Specialist: Databases (Certiport / Pearson VUE, 2023)
+    • Partner: NDG Linux Essentials (Cisco Networking Academy)
+
+[+] Networking & Infrastructure (Cisco Academy):
+    • Cisco CCNA Training (TCP/IP & OSI, Routing/Switching, Security)
+    • Networking Essentials
+    • Network Basics & IT Essentials
+    • Introduction to IoT
+
+[+] Cybersecurity & Endpoints:
+    • Cybersecurity Essentials & Endpoint Security
+    • Introduction to Cybersecurity
+
+[+] Programming & Tooling:
+    • PCAP: Programming Essentials in Python (Python Institute / Cisco)
+    • CPA: Programming Essentials in C++ (C++ Institute / Cisco)
+    • CLA: Programming Essentials in C (C Institute / Cisco)
+    • MTA: Introduction to Programming using JavaScript & HTML/CSS (Microsoft)`,
+
+          skills: `TECHNICAL SKILLS (HANDS-ON IC):
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[+] Cloud & Infrastructure:
+    • Linux (RHEL, Ubuntu, Rocky Linux).
+    • AWS, GCP.
+    • Containers: Docker, Podman.
+
+[+] Networking & Protocols:
+    • TCP/IP Stack, OSI Model, DNS, Network Diagnostics.
+    • Virtual IP (VIP) / Load Balancing, Firewalld.
+
+[+] Automation & Tooling:
+    • Python (Advanced: Scripting, APIs, ETL Pipelines, Tooling).
+    • Ansible (Playbooks at scale), CI/CD, Git, Bash.
+
+[+] Data & Databases:
+    • PostgreSQL (Patroni HA, TimescaleDB, Replication), SQL.
+    • Data Integrity Validation (CDC SCD Type 2, Parquet Data Lakes).
+
+[+] Observability:
+    • Zabbix (Certified Professional 7.0 & Specialist 7.0).
+    • Grafana, Loki, Prometheus, Grafana Alloy, SNMP, Redfish API.`,
+
+          experience: `WORK EXPERIENCE (HANDS-ON IC TRACK RECORD):
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+• Infrastructure Engineer | ATALAIT - IMSS (Nov 2024 - Present)
+  - Designed & operated high-availability Linux platform (PostgreSQL Patroni + VIP).
+  - Reclaimed 500+ GB database storage converting tables to TimescaleDB hypertables.
+  - High-availability Zabbix platform (5,100+ hosts, 3,400+ VMs, 3,500+ vals/sec).
+  - Automated Linux agent lifecycle across 1,500+ endpoints via Ansible.
+  - Developed hot-reloadable multi-channel notification relay in Python.
+  - Built log ingestion pipelines with Grafana Alloy, Loki & Prometheus; Redfish API.
+  - 24/7 critical incident response and Root-Cause Analysis (RCA).
+
+• Cloud Support Engineer | XALDIGITAL (Jul 2024 - Nov 2024)
+  - Supported enterprise clients (Volaris, El Palacio de Hierro) in AWS environments.
+  - Ensured continuity of batch processes and critical ETL pipelines under strict SLAs.
+
+• Jr Monitoring Administrator | National Supercomputing Center IPICYT (Aug 2023 - Jul 2024)
+  - Automated Python workflows for synchronizing 1,500 server inventory via REST APIs.
+  - Zero-downtime migration of critical systems with automated data integrity validation.
+  - Reduced operational manual toil by 90%.`,
+
+          contact: `CONTACT INFORMATION:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+• Email    : orlando.aguilar@ouarit.com
+• LinkedIn : https://www.linkedin.com/in/orlandoaguilarit/
+• GitHub   : https://github.com/ouarIT
+• Location : San Luis Potosí, Mexico`,
+
+          email: `Email: orlando.aguilar@ouarit.com (copied to clipboard!)`
+        }
+      },
+      es: {
+        pageTitle: "Orlando Aguilar | Ingeniero de Infraestructura & DevOps",
+        pageDesc: "Página personal de Orlando Ulises Aguilar Rojas - Ingeniero de Infraestructura y DevOps (IC). LNPP Stack: Linux, Nginx, PostgreSQL, Python.",
+        topBadge: "Autoalojado con ❤️ en <strong>Rocky Linux 10 & K3s</strong>",
+        motd: `================================================================================
+  Bienvenido a ouarit.com por Orlando Aguilar
+  Ingeniero de Infraestructura y DevOps | Autoalojado en Rocky Linux & K3s
+================================================================================`,
+        sessionInfo: "Sesión iniciada: guest@ouarit.com",
+        role: "<strong>Ingeniero de Infraestructura y DevOps</strong> (IC)",
+        education: "Ingeniería en Tecnologías de la Información (UPSLP)",
+        focus: "Resolución analítica de problemas · Sistemas de misión crítica · IC autónomo",
+        philosophy: "Agnóstico a herramientas & pro Open Source · Entender la causa raíz",
+        toolingOther: "y mucho más",
+        homelab: "Dell Latitude · Rocky Linux 10 & K3s · Túnel de Cloudflare",
+        copyBtn: "📋 copiar",
+        copiedToast: "¡Email copiado al portapapeles!",
+        cliPlaceholder: "escribe 'help', 'skills' o haz clic abajo...",
+        uptimeYears: "años",
+        uptimeDays: "días",
+        commands: {
+          help: `COMANDOS DISPONIBLES:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  • certs       : Certificaciones oficiales (Zabbix, Cisco, Certiport)
+  • skills      : Desglose de habilidades técnicas por área
+  • experience  : Trayectoria laboral y proyectos clave
+  • contact     : Canales directos de contacto (Email, LinkedIn, GitHub)
+  • email       : Copiar correo al portapapeles
+  • clear       : Limpiar la terminal`,
+
+          certs: `CERTIFICACIONES Y ACREDITACIONES:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[+] Observabilidad & Monitoreo:
+    • Zabbix Certified Professional 7.0 (2026, Cert. No. CP-2606-058)
+    • Zabbix Certified Specialist 7.0 (2025)
+
+[+] Bases de Datos & Sistemas:
+    • Information Technology Specialist: Databases (Certiport / Pearson VUE, 2023)
+    • Partner: NDG Linux Essentials (Cisco Networking Academy)
+
+[+] Redes & Infraestructura (Cisco Academy):
+    • Capacitación Cisco CCNA (TCP/IP & OSI, Enrutamiento/Conmutación, Seguridad)
+    • Networking Essentials
+    • Conceptos Básicos de Redes & IT Essentials
+    • Introducción a IoT
+
+[+] Ciberseguridad & Terminales:
+    • Cybersecurity Essentials & Seguridad de Terminales (Endpoint Security)
+    • Introducción a la Ciberseguridad
+
+[+] Programación & Desarrollo:
+    • PCAP: Programming Essentials in Python (Python Institute / Cisco)
+    • CPA: Programming Essentials in C++ (C++ Institute / Cisco)
+    • CLA: Programming Essentials in C (C Institute / Cisco)
+    • MTA: Introduction to Programming using JavaScript & HTML/CSS (Microsoft)`,
+
+          skills: `HABILIDADES TÉCNICAS (CV):
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[+] Cloud e Infraestructura:
+    • Linux (RHEL, Ubuntu, Rocky Linux).
+    • AWS, GCP.
+    • Contenedores: Docker, Podman.
+
+[+] Redes y Protocolos:
+    • Stack TCP/IP, Modelo OSI, DNS, Diagnóstico de Redes.
+    • IP Virtual (VIP) / Balanceo de Carga, Firewalld.
+
+[+] Automatización y Desarrollo:
+    • Python (Avanzado: Scripting, APIs, Pipelines ETL, Tooling).
+    • Ansible (Playbooks a escala), CI/CD, Git, Bash.
+
+[+] Datos y Bases de Datos:
+    • PostgreSQL (Patroni HA, TimescaleDB, Replicación), SQL.
+    • Validación de Integridad de Datos (CDC SCD Tipo 2, Data Lakes en Parquet).
+
+[+] Observabilidad:
+    • Zabbix (Certified Professional 7.0 & Specialist 7.0).
+    • Grafana, Loki, Prometheus, Grafana Alloy, SNMP, Redfish API.`,
+
+          experience: `TRAYECTORIA LABORAL (MANOS A LA OBRA):
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+• Ingeniero de Infraestructura | ATALAIT - IMSS (Nov 2024 - Presente)
+  - Diseñé y administré plataforma Linux en HA (PostgreSQL Patroni + IP Virtual).
+  - Reduje dataset de 700 GB a 150 GB (recuperé 500+ GB) con hypertables TimescaleDB.
+  - Plataforma Zabbix HA con proxies distribuidos (5,100+ hosts, 3,400+ VMs, 3,500+ v/s).
+  - Automatización del ciclo de vida de agentes Linux en 1,500+ endpoints vía Ansible.
+  - Creación de relay de notificaciones multicanal hot-reloadable en Python.
+  - Pipelines de logs con Grafana Alloy, Loki y Prometheus; integraciones Redfish API.
+  - Resolución de incidentes críticos 24x7 y análisis de causa raíz (RCA).
+
+• Ingeniero de Soporte (Cloud) | XALDIGITAL (Jul 2024 - Nov 2024)
+  - Soporte a clientes empresariales (Volaris, El Palacio de Hierro) en AWS.
+  - Continuidad de procesos batch y pipelines ETL críticos bajo estrictos SLAs.
+
+• Administrador de Monitoreo Jr | Centro Nacional de Supercómputo IPICYT (Ago 2023 - Jul 2024)
+  - Automatización en Python para sincronizar inventario de 1,500 servidores vía APIs.
+  - Migración de sistemas críticos con 0 downtime y validación de integridad de datos.
+  - Reducción de carga operativa manual en un 90%.`,
+
+          contact: `CANALES DE CONTACTO:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+• Email    : orlando.aguilar@ouarit.com
+• LinkedIn : https://www.linkedin.com/in/orlandoaguilarit/
+• GitHub   : https://github.com/ouarIT
+• Ubicación: San Luis Potosí, México`,
+
+          email: `Email: orlando.aguilar@ouarit.com (¡copiado al portapapeles!)`
+        }
+      }
+    };
+
+    function switchLang(lang) {
+      currentLang = lang;
+      const dict = i18n[lang];
+
+      document.getElementById('html-title').textContent = dict.pageTitle;
+      document.getElementById('html-desc').content = dict.pageDesc;
+      document.getElementById('top-badge-text').innerHTML = dict.topBadge;
+      document.getElementById('motd-banner').textContent = dict.motd;
+      document.getElementById('session-info').textContent = dict.sessionInfo;
+      document.getElementById('ff-role').innerHTML = dict.role;
+      document.getElementById('ff-education').textContent = dict.education;
+      document.getElementById('ff-focus').textContent = dict.focus;
+      document.getElementById('ff-philosophy').textContent = dict.philosophy;
+      document.getElementById('ff-tooling-other').textContent = dict.toolingOther;
+      document.getElementById('ff-homelab').textContent = dict.homelab;
+      document.getElementById('btn-copy').textContent = dict.copyBtn;
+      document.getElementById('terminal-input').placeholder = dict.cliPlaceholder;
+
+      if (lang === 'en') {
+        document.getElementById('loc-en').classList.add('active');
+        document.getElementById('loc-es').classList.remove('active');
+      } else {
+        document.getElementById('loc-es').classList.add('active');
+        document.getElementById('loc-en').classList.remove('active');
+      }
+
+      // Re-render open command output if visible
+      if (lastExecutedCmd && lastExecutedCmd !== 'clear') {
+        const output = document.getElementById('cli-output');
+        if (output.style.display !== 'none' && dict.commands[lastExecutedCmd]) {
+          output.textContent = `$ ${lastExecutedCmd}\n\n${dict.commands[lastExecutedCmd]}`;
+        }
+      }
+
+      updateUptime();
+    }
+
+    // Live Uptime calculation since June 17, 2000 (GMT-6)
+    const birthDate = new Date('2000-06-17T00:00:00-06:00');
+
+    function updateUptime() {
+      const now = new Date();
+      const diffMs = now - birthDate;
+
+      const totalSeconds = Math.floor(diffMs / 1000);
+      const seconds = totalSeconds % 60;
+      const totalMinutes = Math.floor(totalSeconds / 60);
+      const minutes = totalMinutes % 60;
+      const totalHours = Math.floor(totalMinutes / 60);
+      const hours = totalHours % 24;
+
+      let years = now.getFullYear() - birthDate.getFullYear();
+      let m = now.getMonth() - birthDate.getMonth();
+      if (m < 0 || (m === 0 && now.getDate() < birthDate.getDate())) {
+        years--;
+      }
+
+      const lastBirthday = new Date(now.getFullYear(), birthDate.getMonth(), birthDate.getDate());
+      if (now < lastBirthday) {
+        lastBirthday.setFullYear(now.getFullYear() - 1);
+      }
+      const days = Math.floor((now - lastBirthday) / (1000 * 60 * 60 * 24));
+
+      const dict = i18n[currentLang];
+      const uptimeStr = `${years} ${dict.uptimeYears}, ${days} ${dict.uptimeDays}, ${hours}h, ${minutes}m, ${seconds}s`;
+      const el = document.getElementById('uptime-counter');
+      if (el) el.textContent = uptimeStr;
+    }
+
+    setInterval(updateUptime, 1000);
+    updateUptime();
+
+    // Copy email helper
+    function copyEmail() {
+      const email = 'orlando.aguilar@ouarit.com';
+      const toastMsg = i18n[currentLang].copiedToast;
+      navigator.clipboard.writeText(email).then(() => {
+        showToast('✓ ' + toastMsg);
+      }).catch(() => {
+        showToast('Email: ' + email);
+      });
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      toast.textContent = msg;
+      toast.classList.add('show');
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 2500);
+    }
+
+    // Interactive CLI Commands
+    function runCommand(cmd) {
+      const output = document.getElementById('cli-output');
+      const input = document.getElementById('terminal-input');
+      const cleaned = cmd.trim().toLowerCase();
+      lastExecutedCmd = cleaned;
+
+      if (cleaned === 'clear') {
+        output.style.display = 'none';
+        output.innerHTML = '';
+        input.value = '';
+        return;
+      }
+
+      if (cleaned === 'email') {
+        copyEmail();
+      }
+
+      const dict = i18n[currentLang];
+      output.style.display = 'block';
+      if (dict.commands[cleaned]) {
+        output.textContent = `$ ${cleaned}\n\n${dict.commands[cleaned]}`;
+      } else if (cleaned === '') {
+        output.style.display = 'none';
+      } else {
+        const notFoundMsg = currentLang === 'es'
+          ? `Comando no reconocido: '${cleaned}'. Escribe 'help' para ver los comandos disponibles.`
+          : `zsh: command not found: '${cleaned}'. Type 'help' for available commands.`;
+        output.textContent = `$ ${cleaned}\n\n${notFoundMsg}`;
+      }
+
+      input.value = '';
+      output.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    document.getElementById('terminal-input').addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') {
+        runCommand(this.value);
+      }
+    });
+
+    // Initialize English by default
+    switchLang('en');
+  </script>
+</body>
+</html>
