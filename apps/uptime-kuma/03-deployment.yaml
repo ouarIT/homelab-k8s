@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: uptime-kuma
-          image: louislam/uptime-kuma:2.3.2
+          image: louislam/uptime-kuma:2.5.9
           ports:
             - containerPort: 3001  # Puerto nativo de la aplicación
           volumeMounts:

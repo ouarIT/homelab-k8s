@@ -17,15 +17,15 @@ data:
     - Monitoreo:
         - Uptime Kuma:
             icon: uptime-kuma
-            href: https://uptime.ouarit.lol/
+            href: https://kuma.ouarit.com/
             widget:
               type: uptimekuma
               url: http://uptime-kuma-service.uptime-kuma:3001
               slug: default 
-    - Mensajería:
-        - Gotify:
-            icon: gotify
-            href: https://gotify.ouarit.lol/
+#   - Mensajería:
+#       - Gotify:
+#           icon: gotify
+#           href: https://gotify.ouarit.com/
   widgets.yaml: |
     - kubernetes:
         cluster:

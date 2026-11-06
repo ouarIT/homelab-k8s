@@ -24,7 +24,7 @@ metadata:
   labels:
     app: gotify
 spec:
-  replicas: 1
+  replicas: 0
   selector:
     matchLabels:
       app: gotify
@@ -76,6 +76,16 @@ metadata:
     ingress.kubernetes.io/ssl-redirect: "false" # Cambiar a true si manejas SSL
 spec:
   rules:
+  - host: gotify.ouarit.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: gotify-service
+            port:
+              number: 80
   - host: gotify.ouarit.lol
     http:
       paths:

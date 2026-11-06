@@ -6,6 +6,16 @@ metadata:
 spec:
   ingressClassName: traefik
   rules:
+  - host: home.ouarit.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: homepage-service
+            port:
+              number: 80
   - host: home.ouarit.lol
     http:
       paths:

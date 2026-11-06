@@ -26,7 +26,7 @@ spec:
                 fieldRef:
                   fieldPath: status.podIP
             - name: HOMEPAGE_ALLOWED_HOSTS
-              value: "$(MY_POD_IP):3000,home.ouarit.lol"
+              value: "$(MY_POD_IP):3000,home.ouarit.com,home.ouarit.lol"
           ports:
             - name: http
               containerPort: 3000
